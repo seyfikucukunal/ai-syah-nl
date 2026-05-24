@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   description:
     "AI-syah.nl bouwt AI-native websites, GEO strategieën en slimme automatiseringen waarmee bedrijven zichtbaar worden in ChatGPT, Gemini, Claude en Perplexity.",
   metadataBase: new URL("https://ai-syah.nl"),
+  verification: {
+    google: "ysS5YD2zPdHp1IDaShZUHGVfqlMLTpSxXF-q5xQK1f4",
+  },
   alternates: {
     canonical: "https://ai-syah.nl",
   },
