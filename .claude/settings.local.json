@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "PowerShell(python --version 2>&1)",
+      "PowerShell(pip show reportlab 2>&1)",
+      "PowerShell(pip install reportlab 2>&1)",
+      "PowerShell($outputPath = \"c:\\\\Users\\\\seyfi\\\\OneDrive\\\\Desktop\\\\claude\\\\ai-syah-website\\\\GEO-REPORT-KinderopvangIKids.pdf\"; python \"C:\\\\Users\\\\seyfi\\\\.claude\\\\skills\\\\geo\\\\scripts\\\\generate_pdf_report.py\" \"C:\\\\Users\\\\seyfi\\\\AppData\\\\Local\\\\Temp\\\\geo-audit-kinderopvangikids.json\" $outputPath 2>&1; if \\(Test-Path $outputPath\\) { $size = \\(Get-Item $outputPath\\).Length; Write-Host \"SUCCESS: PDF created at $outputPath \\($\\([math]::Round\\($size/1KB, 1\\)\\) KB\\)\" })",
+      "PowerShell($tmpOut = \"C:\\\\Users\\\\seyfi\\\\AppData\\\\Local\\\\Temp\\\\GEO-REPORT-KinderopvangIKids.pdf\"; python \"C:\\\\Users\\\\seyfi\\\\.claude\\\\skills\\\\geo\\\\scripts\\\\generate_pdf_report.py\" \"C:\\\\Users\\\\seyfi\\\\AppData\\\\Local\\\\Temp\\\\geo-audit-kinderopvangikids.json\" $tmpOut 2>&1; if \\($LASTEXITCODE -eq 0 -and \\(Test-Path $tmpOut\\)\\) { $dest = \"c:\\\\Users\\\\seyfi\\\\OneDrive\\\\Desktop\\\\claude\\\\ai-syah-website\\\\GEO-REPORT-KinderopvangIKids.pdf\"; Copy-Item $tmpOut $dest -Force; $size = \\(Get-Item $dest\\).Length; Write-Host \"SUCCESS: PDF saved to $dest \\($\\([math]::Round\\($size/1KB, 1\\)\\) KB\\)\" } else { Write-Host \"Script output above\" })",
+      "PowerShell($tmpOut = \"C:\\\\Users\\\\seyfi\\\\AppData\\\\Local\\\\Temp\\\\GEO-REPORT-KinderopvangIKids.pdf\"; $size = \\(Get-Item $tmpOut\\).Length; Write-Host \"PDF in temp: $tmpOut \\($\\([math]::Round\\($size/1KB, 1\\)\\) KB\\)\"; $dest = \"C:\\\\Users\\\\seyfi\\\\Desktop\\\\GEO-REPORT-KinderopvangIKids.pdf\"; Copy-Item $tmpOut $dest -Force; if \\(Test-Path $dest\\) { Write-Host \"Copied to Desktop: $dest\" })"
+    ]
+  }
+}
