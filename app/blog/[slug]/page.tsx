@@ -123,41 +123,74 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const post = getPostBySlug(slug);
   if (!post) notFound();
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": post!.title,
+    "description": post!.description,
+    "datePublished": post!.date,
+    "dateModified": post!.date,
+    "author": {
+      "@type": "Organization",
+      "name": "AI-syah.nl",
+      "url": "https://ai-syah.nl"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "AI-syah.nl",
+      "url": "https://ai-syah.nl",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://ai-syah.nl/logo-ai-syah.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://ai-syah.nl/blog/${slug}`
+    }
+  };
+
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-24">
-      <div className="mx-auto max-w-3xl">
-        <Link href="/blog" className="mb-8 inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-cyan-300 transition">
-          ← Terug naar kennisbank
-        </Link>
-
-        <div className="mb-6 flex flex-wrap items-center gap-4 mt-6">
-          <span className="rounded-full border border-cyan-400/30 px-3 py-1 text-xs text-cyan-300">
-            {post!.category}
-          </span>
-          <span className="text-xs text-zinc-500">{post!.date}</span>
-          <span className="text-xs text-zinc-500">{post!.readTime}</span>
-        </div>
-
-        <h1 className="mb-6 text-4xl font-bold leading-tight md:text-5xl">
-          {post!.title}
-        </h1>
-
-        <p className="mb-12 text-xl leading-relaxed text-zinc-400 border-l-2 border-cyan-400 pl-4">
-          {post!.description}
-        </p>
-
-        <div className="border-t border-zinc-800 pt-10">
-          {renderMarkdown(post!.content)}
-        </div>
-
-        <div className="mt-16 rounded-3xl border border-cyan-400/30 bg-zinc-900/40 p-8 text-center">
-          <h3 className="mb-3 text-xl font-bold text-cyan-300">Hulp nodig met GEO?</h3>
-          <p className="mb-6 text-zinc-400">AI-syah.nl helpt jouw bedrijf zichtbaar te worden in ChatGPT, Gemini en Claude.</p>
-          <Link href="/#contact" className="rounded-full bg-white px-6 py-3 font-semibold text-black transition hover:bg-cyan-300">
-            Neem contact op →
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <main className="min-h-screen bg-black text-white px-6 py-24">
+        <div className="mx-auto max-w-3xl">
+          <Link href="/blog" className="mb-8 inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-cyan-300 transition">
+            ← Terug naar kennisbank
           </Link>
+
+          <div className="mb-6 flex flex-wrap items-center gap-4 mt-6">
+            <span className="rounded-full border border-cyan-400/30 px-3 py-1 text-xs text-cyan-300">
+              {post!.category}
+            </span>
+            <span className="text-xs text-zinc-500">{post!.date}</span>
+            <span className="text-xs text-zinc-500">{post!.readTime}</span>
+          </div>
+
+          <h1 className="mb-6 text-4xl font-bold leading-tight md:text-5xl">
+            {post!.title}
+          </h1>
+
+          <p className="mb-12 text-xl leading-relaxed text-zinc-400 border-l-2 border-cyan-400 pl-4">
+            {post!.description}
+          </p>
+
+          <div className="border-t border-zinc-800 pt-10">
+            {renderMarkdown(post!.content)}
+          </div>
+
+          <div className="mt-16 rounded-3xl border border-cyan-400/30 bg-zinc-900/40 p-8 text-center">
+            <h3 className="mb-3 text-xl font-bold text-cyan-300">Hulp nodig met GEO?</h3>
+            <p className="mb-6 text-zinc-400">AI-syah.nl helpt jouw bedrijf zichtbaar te worden in ChatGPT, Gemini en Claude.</p>
+            <Link href="/#contact" className="rounded-full bg-white px-6 py-3 font-semibold text-black transition hover:bg-cyan-300">
+              Neem contact op →
+            </Link>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
