@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 interface GeoAuditData {
@@ -124,7 +124,7 @@ function ScoreBar({ score, animate }: { score: number; animate: boolean }) {
   );
 }
 
-export default function GeoAuditResults() {
+function GeoAuditResultsInner() {
   const searchParams = useSearchParams();
   const domain = searchParams.get("domain");
   const cached = searchParams.get("cached");
@@ -434,5 +434,16 @@ const handlePayment = async () => {
 
       </div>
     </div>
+  );
+}
+export default function GeoAuditResults() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin" />
+      </div>
+    }>
+      <GeoAuditResultsInner />
+    </Suspense>
   );
 }
