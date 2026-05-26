@@ -18,6 +18,7 @@ export default function Navbar() {
           <a href="#cases" className="transition hover:text-cyan-300">Cases</a>
           <a href="#articles" className="transition hover:text-cyan-300">Artikelen</a>
           <a href="/blog" className="transition hover:text-cyan-300">Blog</a>
+          <a href="/geo-audit" className="transition hover:text-cyan-300">GEO Audit</a>
         </div>
 
         <div className="flex items-center gap-4">
@@ -45,6 +46,7 @@ export default function Navbar() {
           <a href="#articles" onClick={() => setOpen(false)} className="transition hover:text-cyan-300">Artikelen</a>
           <a href="#contact" onClick={() => setOpen(false)} className="transition hover:text-cyan-300">Contact</a>
           <a href="/blog" className="transition hover:text-cyan-300">Blog</a>
+          <a href="/geo-audit" onClick={() => setOpen(false)} className="transition hover:text-cyan-300">GEO Audit</a>
         </div>
       )}
     </nav>
