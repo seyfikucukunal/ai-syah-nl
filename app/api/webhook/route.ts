@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missende metadata" }, { status: 400 });
     }
 
-    // Genereer volledig rapport via Python API
+    // Genereer volledig rapport + PDF via Python API
     const reportRes = await fetch(`${GEO_API_URL}/audit/full`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -47,60 +47,89 @@ export async function POST(req: NextRequest) {
 
     const reportData = await reportRes.json();
     const report = reportData.report;
+    const pdfBase64 = reportData.pdf_base64;
 
-    // Formatteer rapport als HTML
-    const reportHtml = report
-      .split("\n")
-      .map((line: string) => {
-        if (line.startsWith("# ")) return `<h1 style="color:#000;font-size:24px;margin:20px 0 10px;">${line.replace("# ", "")}</h1>`;
-        if (line.startsWith("## ")) return `<h2 style="color:#22d3ee;font-size:18px;margin:16px 0 8px;border-bottom:1px solid #eee;padding-bottom:4px;">${line.replace("## ", "")}</h2>`;
-        if (line.startsWith("### ")) return `<h3 style="color:#333;font-size:16px;margin:12px 0 6px;">${line.replace("### ", "")}</h3>`;
-        if (line.startsWith("- ")) return `<li style="margin:4px 0;color:#444;">${line.replace("- ", "")}</li>`;
-        if (line.match(/^\d+\. /)) return `<li style="margin:4px 0;color:#444;">${line.replace(/^\d+\. /, "")}</li>`;
-        if (line === "") return "<br/>";
-        return `<p style="margin:6px 0;color:#444;line-height:1.6;">${line}</p>`;
-      })
-      .join("");
+    // Bouw email HTML
+    const score = report.geo_score;
+    const brandName = report.brand_name;
+    const scoreColor = score >= 70 ? "#22d3ee" : score >= 40 ? "#f59e0b" : "#ef4444";
 
-    // Stuur email met rapport
-    await resend.emails.send({
+    const emailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; background: #f9f9f9;">
+        
+        <!-- Header -->
+        <div style="background: #000; padding: 40px; text-align: center;">
+          <h1 style="color: #22d3ee; margin: 0; font-size: 28px;">AI-syah.nl</h1>
+          <p style="color: #fff; margin: 8px 0 0; font-size: 14px; opacity: 0.7;">GEO Audit Rapport</p>
+        </div>
+
+        <!-- Score -->
+        <div style="padding: 30px 40px; background: #fff; text-align: center; border-bottom: 1px solid #eee;">
+          <p style="color: #666; margin: 0 0 8px; font-size: 14px;">GEO Score voor ${url}</p>
+          <div style="display: inline-block; width: 100px; height: 100px; border-radius: 50%; background: ${scoreColor}; line-height: 100px; text-align: center;">
+            <span style="color: #fff; font-size: 32px; font-weight: bold;">${score}</span>
+          </div>
+          <p style="color: #333; font-weight: bold; margin: 12px 0 0; font-size: 18px;">${brandName}</p>
+        </div>
+
+        <!-- Intro -->
+        <div style="padding: 30px 40px; background: #fff; border-bottom: 1px solid #eee;">
+          <h2 style="color: #000; margin: 0 0 10px;">Jouw rapport is klaar! 🎉</h2>
+          <p style="color: #555; margin: 0; line-height: 1.6;">
+            Het volledige GEO audit rapport voor <strong style="color: #22d3ee;">${url}</strong> 
+            is bijgevoegd als PDF. Open de bijlage voor alle bevindingen, scores en aanbevelingen.
+          </p>
+        </div>
+
+        <!-- Summary -->
+        <div style="padding: 30px 40px; background: #fff; border-bottom: 1px solid #eee;">
+          <h3 style="color: #000; margin: 0 0 10px;">Samenvatting</h3>
+          <p style="color: #555; line-height: 1.6;">${report.executive_summary}</p>
+        </div>
+
+        <!-- Quick wins -->
+        <div style="padding: 30px 40px; background: #fff; border-bottom: 1px solid #eee;">
+          <h3 style="color: #000; margin: 0 0 10px;">Top Quick Wins</h3>
+          <ol style="color: #555; padding-left: 20px; line-height: 1.8;">
+            ${report.quick_wins?.slice(0, 3).map((win: string) => `<li>${win}</li>`).join("")}
+          </ol>
+        </div>
+
+        <!-- CTA -->
+        <div style="padding: 30px 40px; background: #000; text-align: center;">
+          <p style="color: #fff; margin: 0 0 16px;">Hulp nodig bij het implementeren?</p>
+          <a href="https://ai-syah.nl/#contact" 
+             style="background: #22d3ee; color: #000; padding: 12px 30px; border-radius: 25px; text-decoration: none; font-weight: bold;">
+            Neem contact op →
+          </a>
+          <p style="color: #666; font-size: 12px; margin: 16px 0 0;">
+            Vragen? Reply op deze email • ai-syah.nl
+          </p>
+        </div>
+
+      </div>
+    `;
+
+    // Stuur email met PDF bijlage
+    const emailOptions: any = {
       from: "AI-syah.nl <rapport@ai-syah.nl>",
       to: email,
       subject: `Jouw GEO Audit Rapport — ${url}`,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; background: #f9f9f9;">
-          
-          <!-- Header -->
-          <div style="background: #000; padding: 40px; text-align: center;">
-            <h1 style="color: #22d3ee; margin: 0; font-size: 28px;">AI-syah.nl</h1>
-            <p style="color: #fff; margin: 8px 0 0; font-size: 14px; opacity: 0.7;">GEO Audit Rapport</p>
-          </div>
+      html: emailHtml,
+    };
 
-          <!-- Intro -->
-          <div style="padding: 30px 40px; background: #fff; border-bottom: 1px solid #eee;">
-            <h2 style="color: #000; margin: 0 0 10px;">Jouw rapport is klaar! 🎉</h2>
-            <p style="color: #555; margin: 0; line-height: 1.6;">
-              Bedankt voor je bestelling. Hieronder vind je het volledige GEO audit rapport voor 
-              <strong style="color: #22d3ee;">${url}</strong>.
-            </p>
-          </div>
+    // Voeg PDF bijlage toe als die beschikbaar is
+    if (pdfBase64) {
+      const domain = url.replace("https://", "").replace("http://", "").replace("www.", "").split("/")[0];
+      emailOptions.attachments = [
+        {
+          filename: `GEO-Rapport-${domain}.pdf`,
+          content: pdfBase64,
+        },
+      ];
+    }
 
-          <!-- Rapport -->
-          <div style="padding: 30px 40px; background: #fff;">
-            ${reportHtml}
-          </div>
-
-          <!-- Footer -->
-          <div style="padding: 30px 40px; background: #f5f5f5; border-top: 1px solid #eee; text-align: center;">
-            <p style="color: #888; font-size: 13px; margin: 0 0 8px;">
-              Vragen over dit rapport? Reply op deze email.
-            </p>
-            <a href="https://ai-syah.nl" style="color: #22d3ee; font-size: 13px;">ai-syah.nl</a>
-          </div>
-
-        </div>
-      `,
-    });
+    await resend.emails.send(emailOptions);
 
     return NextResponse.json({ status: "ok" });
   } catch (error) {
