@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export const maxDuration = 120; // Vercel: max 120 seconden
+
 const GEO_API_URL = process.env.GEO_API_URL || "https://geo-api-eqn1.onrender.com";
 
 const freeAuditCache = new Map<string, { data: unknown; timestamp: number }>();
@@ -41,7 +43,7 @@ export async function POST(request: NextRequest) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ url }),
-      signal: AbortSignal.timeout(60000),
+      signal: AbortSignal.timeout(120000),
     });
 
     if (!apiRes.ok) {
