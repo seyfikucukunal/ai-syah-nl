@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function GeoAuditPage() {
+function GeoAuditContent() {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
   const [error, setError] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const autoStarted = useRef(false);
 
   const steps = [
     "Website ophalen...",
@@ -18,11 +21,9 @@ export default function GeoAuditPage() {
     "Rapport samenstellen...",
   ];
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const runScan = async (scanUrl: string) => {
     setError("");
-
-    let cleanUrl = url.trim();
+    let cleanUrl = scanUrl.trim();
     if (!cleanUrl.startsWith("http")) cleanUrl = "https://" + cleanUrl;
 
     try {
@@ -61,6 +62,21 @@ export default function GeoAuditPage() {
       setLoading(false);
       setError(err instanceof Error ? err.message : "Er ging iets mis. Probeer het opnieuw.");
     }
+  };
+
+  // Auto-start als URL meegegeven via ?url=
+  useEffect(() => {
+    const urlParam = searchParams.get("url");
+    if (urlParam && !autoStarted.current) {
+      autoStarted.current = true;
+      setUrl(urlParam);
+      runScan(urlParam);
+    }
+  }, [searchParams]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await runScan(url);
   };
 
   if (loading) {
@@ -106,20 +122,16 @@ export default function GeoAuditPage() {
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden text-white">
-      {/* Glow achtergrond */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/2 top-1/3 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-cyan-500/20 blur-[120px]" />
       </div>
 
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-20">
-
-        {/* Badge */}
         <div className="inline-flex items-center gap-2 bg-cyan-400/10 border border-cyan-400/20 rounded-full px-4 py-1.5 mb-8">
           <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
           <span className="text-cyan-300 text-xs font-medium tracking-wide uppercase">Gratis GEO Audit</span>
         </div>
 
-        {/* Headline */}
         <h1 className="text-4xl md:text-6xl font-bold text-white text-center leading-tight mb-4 max-w-3xl">
           Vindt ChatGPT
           <span className="text-cyan-300"> jouw bedrijf</span>?
@@ -129,7 +141,6 @@ export default function GeoAuditPage() {
           Vul je website in en ontdek in 30 seconden hoe zichtbaar jij bent voor AI-zoekmachines zoals ChatGPT, Gemini en Perplexity.
         </p>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="w-full max-w-xl space-y-3">
           <div className="relative">
             <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">
@@ -160,7 +171,6 @@ export default function GeoAuditPage() {
           </p>
         </form>
 
-        {/* Features */}
         <div className="flex flex-wrap items-center justify-center gap-6 mt-16 text-zinc-500 text-sm">
           {["ChatGPT check", "Schema markup", "llms.txt analyse"].map((item) => (
             <div key={item} className="flex items-center gap-2">
@@ -171,8 +181,15 @@ export default function GeoAuditPage() {
             </div>
           ))}
         </div>
-
       </div>
     </div>
+  );
+}
+
+export default function GeoAuditPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-black" />}>
+      <GeoAuditContent />
+    </Suspense>
   );
 }
