@@ -1,5 +1,6 @@
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
+import ReportPreview from "./components/ReportPreview";
 import Services from "./components/Services";
 import Stats from "./components/Stats";
 import Geo from "./components/Geo";
@@ -17,6 +18,7 @@ export default function Home() {
       </div>
       <Navbar />
       <Hero />
+      <ReportPreview />
       <Services />
       <Stats />
       <Geo />
