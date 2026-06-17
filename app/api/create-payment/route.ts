@@ -25,7 +25,7 @@ const payment = await mollieClient.payments.create({
   },
   description: `GEO Audit Rapport — ${domain || url}`,
   redirectUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/geo-audit/bedankt?domain=${encodeURIComponent(domain || url)}&email=${encodeURIComponent(email || "")}`,
-  ...(isLocal ? {} : { webhookUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/webhook` }),
+  ...(isLocal ? {} : { webhookUrl: `https://geo-api-eqn1.onrender.com/payment/webhook` }),
   metadata: {
     url,
     email: email || "",
