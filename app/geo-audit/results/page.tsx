@@ -166,7 +166,7 @@ const handlePayment = async () => {
       const res = await fetch("/api/create-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: data.url, domain, email: paymentEmail }),
+        body: JSON.stringify({ url: data.url, domain: domain || data.url, email: paymentEmail }),
       });
       const { checkoutUrl } = await res.json();
       window.location.href = checkoutUrl;
