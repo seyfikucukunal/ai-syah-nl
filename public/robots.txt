@@ -1,13 +1,32 @@
 User-agent: *
 Allow: /
-
+# OpenAI
 User-agent: GPTBot
 Allow: /
-
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+# Google AI
 User-agent: Google-Extended
 Allow: /
-
+# Anthropic
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-Web
+Allow: /
+# Perplexity
 User-agent: PerplexityBot
 Allow: /
-
+User-agent: Perplexity-User
+Allow: /
+# Common Crawl
+User-agent: CCBot
+Allow: /
+# You.com
+User-agent: YouBot
+Allow: /
 Sitemap: https://ai-syah.nl/sitemap.xml
+# AI Context
+LLMS: https://ai-syah.nl/llms.txt
+
