@@ -15,23 +15,24 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  try {
-    const isLocal = process.env.NEXT_PUBLIC_BASE_URL?.includes("localhost");
+  // Gebruik url als fallback voor domain
+  const safeDomain = domain && domain !== "undefined" ? domain : url;
 
-const payment = await mollieClient.payments.create({
-  amount: {
-    currency: "EUR",
-    value: "9.99",
-  },
-  description: `GEO Audit Rapport — ${domain || url}`,
-  redirectUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/geo-audit/bedankt?domain=${encodeURIComponent(domain || url)}&email=${encodeURIComponent(email || "")}`,
-  ...(isLocal ? {} : { webhookUrl: `https://geo-api-eqn1.onrender.com/payment/webhook` }),
-  metadata: {
-    url,
-    email: email || "",
-    domain: domain || "",
-  },
-});
+  try {
+    const payment = await mollieClient.payments.create({
+      amount: {
+        currency: "EUR",
+        value: "9.99",
+      },
+      description: `GEO Audit Rapport — ${safeDomain}`,
+      redirectUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/geo-audit/bedankt?domain=${encodeURIComponent(safeDomain)}&email=${encodeURIComponent(email || "")}`,
+      webhookUrl: `https://geo-api-eqn1.onrender.com/payment/webhook`,
+      metadata: {
+        url,
+        email: email || "",
+        domain: safeDomain,
+      },
+    });
 
     return NextResponse.json({ checkoutUrl: payment.getCheckoutUrl() });
   } catch (error) {
