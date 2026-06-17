@@ -6,7 +6,7 @@ export default function ReportPreview() {
         {/* Header */}
         <div className="text-center mb-16">
           <span className="inline-block bg-cyan-400/10 border border-cyan-400/20 text-cyan-300 text-xs font-medium tracking-widest uppercase px-4 py-1.5 rounded-full mb-6">
-            Zie het voor je betaalt
+            Ontdek uw AI-zichtbaarheid voordat u investeert
           </span>
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
             Een echt rapport — geen teaser.
@@ -55,24 +55,25 @@ export default function ReportPreview() {
           </div>
 
           {/* Kaart 2: AI Crawler toegang */}
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-6 space-y-4">
-            <p className="text-xs text-zinc-500 uppercase tracking-widest">AI Crawler Toegang</p>
-            <p className="text-zinc-400 text-xs">Als een crawler je niet kan bereiken, kan het AI-platform je niet aanbevelen.</p>
-            <div className="space-y-2">
-              {[
-                { bot: "GPTBot", platform: "ChatGPT", status: "Geblokkeerd", color: "#ef4444" },
-                { bot: "ClaudeBot", platform: "Claude", status: "Geblokkeerd", color: "#ef4444" },
-                { bot: "PerplexityBot", platform: "Perplexity", status: "Geblokkeerd", color: "#ef4444" },
-                { bot: "Google-Extended", platform: "Gemini", status: "Toegestaan", color: "#22d3ee" },
-                { bot: "Bingbot", platform: "Bing Copilot", status: "Toegestaan", color: "#22d3ee" },
-              ].map((row) => (
-                <div key={row.bot} className="flex items-center justify-between text-xs py-1.5 border-b border-zinc-800/50">
-                  <span className="text-zinc-400 font-mono">{row.bot}</span>
-                  <span className="text-zinc-500">{row.platform}</span>
-                  <span className="font-semibold" style={{ color: row.color }}>{row.status}</span>
-                </div>
-              ))}
+          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-6 flex flex-col">
+            <p className="text-xs text-zinc-500 uppercase tracking-widest mb-2">AI Crawler Toegang</p>
+            <p className="text-zinc-400 text-xs leading-relaxed mb-4">Als een crawler je niet kan bereiken, kan het AI-platform je niet aanbevelen.</p>
+            <div className="grid grid-cols-3 text-[10px] text-zinc-600 uppercase tracking-wider pb-2 border-b border-zinc-800">
+              <span>Crawler</span><span className="text-center">Platform</span><span className="text-right">Status</span>
             </div>
+            {[
+              { bot: "GPTBot", platform: "ChatGPT", status: "Geblokkeerd", color: "#ef4444" },
+              { bot: "ClaudeBot", platform: "Claude", status: "Geblokkeerd", color: "#ef4444" },
+              { bot: "PerplexityBot", platform: "Perplexity", status: "Geblokkeerd", color: "#ef4444" },
+              { bot: "Google-Extended", platform: "Gemini", status: "Toegestaan", color: "#22d3ee" },
+              { bot: "Bingbot", platform: "Bing Copilot", status: "Toegestaan", color: "#22d3ee" },
+            ].map((row) => (
+              <div key={row.bot} className="grid grid-cols-3 items-center text-xs py-2.5 border-b border-zinc-800/50">
+                <span className="text-zinc-300 font-mono text-[11px]">{row.bot}</span>
+                <span className="text-zinc-500 text-center">{row.platform}</span>
+                <span className="font-semibold text-right" style={{ color: row.color }}>{row.status}</span>
+              </div>
+            ))}
           </div>
 
           {/* Kaart 3: Actieplan */}
