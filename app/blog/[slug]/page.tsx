@@ -14,6 +14,23 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${post.title} — AI-syah.nl`,
     description: post.description,
+    openGraph: {
+      title: `${post.title} — AI-syah.nl`,
+      description: post.description,
+      url: `https://www.ai-syah.nl/blog/${slug}`,
+      siteName: "AI-syah.nl",
+      locale: "nl_NL",
+      type: "article",
+      publishedTime: post.date,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${post.title} — AI-syah.nl`,
+      description: post.description,
+    },
+    alternates: {
+      canonical: `https://www.ai-syah.nl/blog/${slug}`,
+    },
   };
 }
 
@@ -125,29 +142,71 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
+    "@id": `https://www.ai-syah.nl/blog/${slug}`,
     "headline": post!.title,
     "description": post!.description,
     "datePublished": post!.date,
     "dateModified": post!.date,
+    "inLanguage": "nl-NL",
+    "url": `https://www.ai-syah.nl/blog/${slug}`,
     "author": {
       "@type": "Organization",
+      "@id": "https://www.ai-syah.nl/#organization",
       "name": "AI-syah.nl",
-      "url": "https://ai-syah.nl"
+      "url": "https://www.ai-syah.nl",
     },
     "publisher": {
       "@type": "Organization",
+      "@id": "https://www.ai-syah.nl/#organization",
       "name": "AI-syah.nl",
-      "url": "https://ai-syah.nl",
+      "url": "https://www.ai-syah.nl",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://ai-syah.nl/logo-ai-syah.png"
-      }
+        "url": "https://www.ai-syah.nl/logo-ai-syah.png",
+        "width": 200,
+        "height": 200,
+      },
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://ai-syah.nl/blog/${slug}`
-    }
+      "@id": `https://www.ai-syah.nl/blog/${slug}`,
+    },
+    "isPartOf": {
+      "@type": "Blog",
+      "@id": "https://www.ai-syah.nl/blog",
+      "name": "GEO & AI Kennisbank — AI-syah.nl",
+    },
+    "about": {
+      "@type": "Thing",
+      "name": post!.category,
+    },
+    "keywords": `${post!.category}, GEO, Generative Engine Optimization, AI vindbaarheid, AI-syah.nl`,
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.ai-syah.nl",
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Kennisbank",
+        "item": "https://www.ai-syah.nl/blog",
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": post!.title,
+        "item": `https://www.ai-syah.nl/blog/${slug}`,
+      },
+    ],
   };
 
   return (
@@ -155,6 +214,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <main className="min-h-screen bg-black text-white px-6 py-24">
         <div className="mx-auto max-w-3xl">
