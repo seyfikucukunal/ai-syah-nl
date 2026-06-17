@@ -77,7 +77,7 @@ export default function Hero() {
             </span>
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
+          <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-6">
             Word aanbevolen door AI,<br />
             <span className="text-cyan-400">niet genegeerd</span>.
           </h1>
@@ -112,7 +112,7 @@ export default function Hero() {
 
           {/* Trust badges */}
           <div className="flex flex-nowrap gap-6 mt-10 text-zinc-500 text-sm">
-            {["ChatGPT check", "6 GEO dimensies", "llms.txt analyse", "Schema markup"].map((item) => (
+            {["ChatGPT", "6 dimensies", "llms.txt", "Schema"].map((item) => (
               <div key={item} className="flex items-center gap-2">
                 <svg className="w-4 h-4 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
