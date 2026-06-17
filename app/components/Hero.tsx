@@ -64,9 +64,9 @@ export default function Hero() {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="min-h-[90vh] flex items-center px-6 py-20"
+      className="min-h-[90vh] flex items-center px-6 py-12"
     >
-      <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-16 items-center">
+      <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-16 items-center min-h-[70vh]">
 
         {/* Links: tekst + scan input */}
         <div>
@@ -77,7 +77,7 @@ export default function Hero() {
             </span>
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
             Word aanbevolen door AI,<br />
             <span className="text-cyan-400">niet genegeerd</span>.
           </h1>
