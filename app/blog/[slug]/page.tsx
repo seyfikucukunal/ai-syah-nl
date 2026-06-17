@@ -146,8 +146,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     "@id": `https://www.ai-syah.nl/blog/${slug}`,
     "headline": post!.title,
     "description": post!.description,
-    "datePublished": post!.date,
-    "dateModified": post!.date,
+    "datePublished": post!.date.includes("T") ? post!.date : `${post!.date}T00:00:00+02:00`,
+    "dateModified": post!.date.includes("T") ? post!.date : `${post!.date}T00:00:00+02:00`,
     "inLanguage": "nl-NL",
     "url": `https://www.ai-syah.nl/blog/${slug}`,
     "author": {
@@ -181,6 +181,12 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       "@type": "Thing",
       "name": post!.category,
     },
+    "image": {
+    "@type": "ImageObject",
+    "url": "https://www.ai-syah.nl/og-image.png",
+    "width": 1200,
+    "height": 630
+  },
     "keywords": `${post!.category}, GEO, Generative Engine Optimization, AI vindbaarheid, AI-syah.nl`,
   };
 
