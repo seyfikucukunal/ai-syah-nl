@@ -77,8 +77,8 @@ export default function Hero() {
             </span>
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
-            Word aanbevolen door AI,{" "}
+          <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
+            Word aanbevolen door AI,<br />
             <span className="text-cyan-400">niet genegeerd</span>.
           </h1>
 
@@ -99,7 +99,7 @@ export default function Hero() {
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-cyan-400 hover:bg-cyan-300 text-black font-bold px-6 py-4 rounded-2xl transition-all whitespace-nowrap disabled:opacity-50"
+                className="bg-cyan-400 hover:bg-cyan-300 text-black font-bold px-5 py-3.5 rounded-2xl text-sm transition-all whitespace-nowrap disabled:opacity-50"
               >
                 {loading ? "Scannen..." : "Gratis scannen →"}
               </button>
@@ -111,7 +111,7 @@ export default function Hero() {
           </form>
 
           {/* Trust badges */}
-          <div className="flex flex-wrap gap-6 mt-10 text-zinc-500 text-sm">
+          <div className="flex flex-nowrap gap-6 mt-10 text-zinc-500 text-sm">
             {["ChatGPT check", "6 GEO dimensies", "llms.txt analyse", "Schema markup"].map((item) => (
               <div key={item} className="flex items-center gap-2">
                 <svg className="w-4 h-4 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
