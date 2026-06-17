@@ -87,7 +87,9 @@ const organizationSchema = {
   "description": "AI-syah.nl is een gespecialiseerd bureau voor Generative Engine Optimization (GEO), AI-native websites en slimme automatiseringen. Wij helpen bedrijven zichtbaar en aanbevolen te worden in ChatGPT, Gemini, Claude en Perplexity.",
   "address": {
     "@type": "PostalAddress",
-    "addressLocality": "Schiedam",
+    "streetAddress": "Kethelweg 208",
+    "addressLocality": "Vlaardingen",
+    "postalCode": "3135 GP",
     "addressRegion": "Zuid-Holland",
     "addressCountry": "NL",
   },
