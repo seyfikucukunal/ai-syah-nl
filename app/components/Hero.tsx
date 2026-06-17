@@ -78,7 +78,7 @@ export default function Hero() {
           </div>
 
           <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
-            Word geciteerd door AI,{" "}
+            Word aanbevolen door AI,{" "}
             <span className="text-cyan-400">niet genegeerd</span>.
           </h1>
 
