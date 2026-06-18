@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI-syah.nl — Word aanbevolen door AI",
+  title: "AI-syah — GEO Bureau Nederland | Generative Engine Optimization",
   description:
     "AI-syah.nl bouwt AI-native websites, GEO strategieën en slimme automatiseringen waarmee bedrijven zichtbaar en aanbevolen worden in ChatGPT, Gemini, Claude en Perplexity.",
   metadataBase: new URL("https://www.ai-syah.nl"),
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "AI-syah.nl", url: "https://www.ai-syah.nl" }],
   openGraph: {
-    title: "AI-syah.nl — Word aanbevolen door AI",
+    title: "AI-syah — GEO Bureau Nederland | Generative Engine Optimization",
     description:
       "AI-native websites, GEO strategieën en automatiseringen voor bedrijven die aanbevolen willen worden in ChatGPT, Gemini, Claude en Perplexity.",
     url: "https://www.ai-syah.nl",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI-syah.nl — Word aanbevolen door AI",
+    title: "AI-syah — GEO Bureau Nederland | Generative Engine Optimization",
     description:
       "AI-native websites, GEO strategieën en automatiseringen voor bedrijven die zichtbaar willen zijn in AI zoekmachines.",
     images: ["/og-image.png"],
