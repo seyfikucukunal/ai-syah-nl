@@ -4,6 +4,7 @@ import ReportPreview from "./components/ReportPreview";
 import Services from "./components/Services";
 import Stats from "./components/Stats";
 import Geo from "./components/Geo";
+import FAQ from "./components/FAQ";
 import Cases from "./components/Cases";
 import Articles from "./components/Articles";
 import Contact from "./components/Contact";
@@ -22,6 +23,7 @@ export default function Home() {
       <Services />
       <Stats />
       <Geo />
+      <FAQ />
       <Cases />
       <Articles />
       <Contact />
