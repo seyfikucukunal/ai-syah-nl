@@ -70,11 +70,23 @@ export default function Hero() {
 
         {/* Links: tekst + scan input */}
         <div>
+          {/* Stat badge met bronvermelding */}
           <div className="inline-flex items-center gap-2 bg-cyan-400/10 border border-cyan-400/20 rounded-full px-4 py-1.5 mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
             <span className="text-cyan-300 text-xs font-medium tracking-wide uppercase">
               64% van zoekopdrachten vindt plaats in AI
             </span>
+            {/* Bronvermelding — zichtbaar voor AI crawlers, subtiel voor bezoekers */}
+            <a
+              href="https://www.gartner.com/en/newsroom/press-releases/2024-02-19-gartner-predicts-search-engine-volume-will-drop-25-percent-by-2026"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-zinc-600 hover:text-zinc-400 text-xs transition-colors ml-1"
+              title="Bron: Gartner (2024)"
+              aria-label="Bron: Gartner 2024 - Search volume rapport"
+            >
+              [bron]
+            </a>
           </div>
 
           <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
@@ -121,6 +133,20 @@ export default function Hero() {
               </div>
             ))}
           </div>
+
+          {/* Author trust signal — E-E-A-T voor AI crawlers */}
+          <p className="text-zinc-600 text-xs mt-6">
+            Door{" "}
+            <a
+              href="https://www.linkedin.com/in/seyfi-kucukunal-06465b12"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-zinc-500 hover:text-cyan-400 transition-colors underline underline-offset-2"
+            >
+              Seyfi Küçükünal
+            </a>
+            {" "}— GEO Specialist &amp; Oprichter AI-syah.nl
+          </p>
         </div>
 
         {/* Rechts: score preview kaart */}

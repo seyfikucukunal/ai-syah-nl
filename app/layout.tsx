@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     "AI marketing bureau",
     "Perplexity optimalisatie",
   ],
-  authors: [{ name: "AI-syah.nl", url: "https://www.ai-syah.nl" }],
+  authors: [{ name: "Seyfi Küçükünal", url: "https://www.linkedin.com/in/seyfi-kucukunal-06465b12" }],
   openGraph: {
     title: "AI-syah — GEO Bureau Nederland | Generative Engine Optimization",
     description:
@@ -70,7 +70,41 @@ export const metadata: Metadata = {
   },
 };
 
-// JSON-LD Schema's
+// ─── JSON-LD Schemas ───────────────────────────────────────────────────────────
+
+// 1. Person — Seyfi Küçükünal (founder / E-E-A-T author signal)
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://www.ai-syah.nl/#seyfi-kucuk",
+  "name": "Seyfi Küçükünal",
+  "jobTitle": "Oprichter & GEO Specialist",
+  "description": "Seyfi Küçükünal is oprichter van AI-syah.nl en gespecialiseerd in Generative Engine Optimization (GEO), AI-zichtbaarheid voor MKB en AI-native webontwikkeling.",
+  "url": "https://www.ai-syah.nl",
+  "email": "info@ai-syah.nl",
+  "worksFor": {
+    "@id": "https://www.ai-syah.nl/#organization",
+  },
+  "sameAs": [
+    "https://www.linkedin.com/in/seyfi-kucukunal-06465b12",
+  ],
+  "knowsAbout": [
+    "Generative Engine Optimization",
+    "AI Marketing",
+    "Large Language Models",
+    "ChatGPT Optimization",
+    "Schema Markup",
+    "AI Automation",
+    "Next.js",
+    "Python FastAPI",
+  ],
+  "nationality": {
+    "@type": "Country",
+    "name": "Netherlands",
+  },
+};
+
+// 2. Organization — uitgebreid met founder + sameAs
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -84,7 +118,7 @@ const organizationSchema = {
     "width": 200,
     "height": 200,
   },
-  "description": "AI-syah.nl is een gespecialiseerd bureau voor Generative Engine Optimization (GEO), AI-native websites en slimme automatiseringen. Wij helpen bedrijven zichtbaar en aanbevolen te worden in ChatGPT, Gemini, Claude en Perplexity.",
+  "description": "AI-syah.nl is een gespecialiseerd bureau voor Generative Engine Optimization (GEO), AI-native websites en slimme automatiseringen. Wij helpen MKB-bedrijven zichtbaar en aanbevolen te worden in ChatGPT, Gemini, Claude en Perplexity.",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "Kethelweg 208",
@@ -99,8 +133,17 @@ const organizationSchema = {
     "email": "info@ai-syah.nl",
     "availableLanguage": ["Dutch", "English"],
   },
+  "founder": {
+    "@id": "https://www.ai-syah.nl/#seyfi-kucuk",
+  },
+  "employee": [
+    {
+      "@id": "https://www.ai-syah.nl/#seyfi-kucuk",
+    },
+  ],
   "sameAs": [
     "https://www.linkedin.com/company/ai-syah",
+    "https://www.linkedin.com/in/seyfi-kucukunal-06465b12",
   ],
   "foundingDate": "2024",
   "areaServed": {
@@ -118,6 +161,7 @@ const organizationSchema = {
   ],
 };
 
+// 3. WebSite
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
@@ -127,6 +171,9 @@ const websiteSchema = {
   "description": "AI-native bureau voor GEO, AI websites en automatiseringen",
   "publisher": {
     "@id": "https://www.ai-syah.nl/#organization",
+  },
+  "author": {
+    "@id": "https://www.ai-syah.nl/#seyfi-kucuk",
   },
   "potentialAction": {
     "@type": "SearchAction",
@@ -139,6 +186,7 @@ const websiteSchema = {
   "inLanguage": "nl-NL",
 };
 
+// 4. Services
 const servicesSchema = {
   "@context": "https://schema.org",
   "@type": "ItemList",
@@ -205,6 +253,7 @@ const servicesSchema = {
   ],
 };
 
+// 5. FAQPage — gesynchroniseerd met FAQ.tsx content
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -222,7 +271,7 @@ const faqSchema = {
       "name": "Waarom is GEO belangrijk voor mijn bedrijf?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "64% van zoekopdrachten vindt nu plaats via AI-systemen. Als uw bedrijf niet geoptimaliseerd is voor deze AI-zoekmachines, mist u potentiële klanten die via ChatGPT, Gemini of Perplexity naar uw diensten zoeken.",
+        "text": "Volgens Gartner (2024) vindt inmiddels een significant deel van zoekopdrachten plaats via AI-systemen. Als uw bedrijf niet geoptimaliseerd is voor deze AI-zoekmachines, mist u potentiële klanten die via ChatGPT, Gemini of Perplexity naar uw diensten zoeken.",
       },
     },
     {
@@ -260,18 +309,27 @@ export default function RootLayout({
   return (
     <html lang="nl">
       <head>
+        {/* Person schema — E-E-A-T author/founder signal */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+        />
+        {/* Organization — uitgebreid met founder + sameAs */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
+        {/* WebSite */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
+        {/* Services */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesSchema) }}
         />
+        {/* FAQPage */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
