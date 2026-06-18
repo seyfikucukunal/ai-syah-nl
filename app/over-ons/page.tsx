@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Over Ons — AI-syah.nl",
-  description: "Maak kennis met het team achter AI-syah.nl. Oprichter Seyfi Kucukunal en onze AI agents ATLAS, HERMES, ORACLE en ARGUS helpen bedrijven zichtbaar te worden in ChatGPT, Gemini en Perplexity.",
+  description: "Maak kennis met het team achter AI-syah.nl. Oprichter Seyfi Küçükünal en onze AI agents ATLAS, HERMES, ORACLE en ARGUS helpen bedrijven zichtbaar te worden in ChatGPT, Gemini en Perplexity.",
   alternates: {
     canonical: "https://www.ai-syah.nl/over-ons",
   },
@@ -22,7 +22,7 @@ const teamSchema = {
   "@id": "https://www.ai-syah.nl/over-ons",
   "url": "https://www.ai-syah.nl/over-ons",
   "name": "Over AI-syah.nl",
-  "description": "Het team achter AI-syah.nl bestaat uit oprichter Seyfi Kucukunal en vier gespecialiseerde AI agents.",
+  "description": "Het team achter AI-syah.nl bestaat uit oprichter Seyfi Küçükünal en vier gespecialiseerde AI agents.",
   "publisher": {
     "@id": "https://www.ai-syah.nl/#organization",
   },
@@ -35,7 +35,7 @@ const founderSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
   "@id": "https://www.ai-syah.nl/#seyfi",
-  "name": "Seyfi Kucukunal",
+  "name": "Seyfi Küçükünal",
   "jobTitle": "Oprichter & GEO Strateeg",
   "worksFor": {
     "@id": "https://www.ai-syah.nl/#organization",
@@ -134,7 +134,7 @@ export default function OverOnsPage() {
                 </div>
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-3 mb-3">
-                    <h2 className="text-2xl font-bold text-white">Seyfi Kucukunal</h2>
+                    <h2 className="text-2xl font-bold text-white">Seyfi Küçükünal</h2>
                     <span className="text-xs bg-cyan-400/10 border border-cyan-400/20 text-cyan-300 px-3 py-1 rounded-full">
                       Oprichter & GEO Strateeg
                     </span>
