@@ -31,12 +31,15 @@ export async function POST(request: NextRequest) {
   const domain = extractDomain(url);
   const cached = freeAuditCache.get(domain);
   if (cached) {
+    console.log(`[geo-audit scan] domain=${domain} cached=true at=${new Date().toISOString()}`);
     return NextResponse.json({
       ...(cached.data as Record<string, unknown>),
       domain: domain,
       already_used: true,
     });
   }
+
+  console.log(`[geo-audit scan] domain=${domain} cached=false at=${new Date().toISOString()}`);
 
   try {
     const apiRes = await fetch(`${GEO_API_URL}/audit/basic`, {
