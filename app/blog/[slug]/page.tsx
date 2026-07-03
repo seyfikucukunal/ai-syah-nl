@@ -151,10 +151,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     "inLanguage": "nl-NL",
     "url": `https://www.ai-syah.nl/blog/${slug}`,
     "author": {
-      "@type": "Organization",
-      "@id": "https://www.ai-syah.nl/#organization",
-      "name": "AI-syah.nl",
-      "url": "https://www.ai-syah.nl",
+      "@type": "Person",
+      "@id": "https://www.ai-syah.nl/#seyfi-kucuk",
+      "name": "Seyfi Küçükünal",
+      "url": "https://www.ai-syah.nl/over-ons",
     },
     "publisher": {
       "@type": "Organization",
@@ -238,6 +238,13 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <span className="text-xs text-zinc-500">{post!.date}</span>
             <span className="text-xs text-zinc-500">{post!.readTime}</span>
           </div>
+
+          <p className="mb-2 text-sm text-zinc-500">
+            Door{" "}
+            <Link href="/over-ons" className="text-cyan-300 hover:underline">
+              Seyfi Küçükünal
+            </Link>
+          </p>
 
           <h1 className="mb-6 text-4xl font-bold leading-tight md:text-5xl">
             {post!.title}

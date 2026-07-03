@@ -19,6 +19,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: "https://ai-syah.nl/over-ons",
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    },
+    {
+      url: "https://ai-syah.nl/geo-audit",
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.9,
+    },
+    {
       url: "https://ai-syah.nl/blog",
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
