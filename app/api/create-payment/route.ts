@@ -18,6 +18,10 @@ export async function POST(req: NextRequest) {
   // Gebruik url als fallback voor domain
   const safeDomain = domain && domain !== "undefined" ? domain : url;
 
+  console.log(
+    `[create-payment] domain=${safeDomain} email=${email || "(geen)"} url=${url} at=${new Date().toISOString()}`
+  );
+
   try {
     const payment = await mollieClient.payments.create({
       amount: {

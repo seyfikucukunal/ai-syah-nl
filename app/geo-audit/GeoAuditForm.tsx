@@ -4,8 +4,11 @@ import { useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import AutoStartFromQuery from "./AutoStartFromQuery";
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function GeoAuditForm() {
   const [url, setUrl] = useState("");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
   const [error, setError] = useState("");
@@ -19,7 +22,7 @@ export default function GeoAuditForm() {
     "Rapport samenstellen...",
   ];
 
-  const runScan = async (scanUrl: string) => {
+  const runScan = async (scanUrl: string, scanEmail: string) => {
     setError("");
     let cleanUrl = scanUrl.trim();
     if (!cleanUrl.startsWith("http")) cleanUrl = "https://" + cleanUrl;
@@ -28,6 +31,11 @@ export default function GeoAuditForm() {
       new URL(cleanUrl);
     } catch {
       setError("Voer een geldige URL in, bijv. https://jouwbedrijf.nl");
+      return;
+    }
+
+    if (!EMAIL_RE.test(scanEmail.trim())) {
+      setError("Vul een geldig e-mailadres in — daar sturen we je score naartoe");
       return;
     }
 
@@ -42,7 +50,7 @@ export default function GeoAuditForm() {
       const res = await fetch("/api/geo-audit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: cleanUrl }),
+        body: JSON.stringify({ url: cleanUrl, email: scanEmail.trim() }),
       });
 
       const data = await res.json();
@@ -64,7 +72,7 @@ export default function GeoAuditForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await runScan(url);
+    await runScan(url, email);
   };
 
   if (loading) {
@@ -114,7 +122,6 @@ export default function GeoAuditForm() {
         <AutoStartFromQuery
           onUrl={(urlParam) => {
             setUrl(urlParam);
-            runScan(urlParam);
           }}
         />
       </Suspense>
@@ -133,6 +140,21 @@ export default function GeoAuditForm() {
         />
       </div>
 
+      <div className="relative">
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+          </svg>
+        </div>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="jouw@email.nl"
+          className="w-full bg-zinc-900/60 border border-zinc-800 rounded-2xl pl-12 pr-4 py-4 text-white placeholder-zinc-600 focus:outline-none focus:border-cyan-400 transition-all text-base"
+        />
+      </div>
+
       {error && <p className="text-red-400 text-sm pl-1">{error}</p>}
 
       <button
@@ -143,7 +165,7 @@ export default function GeoAuditForm() {
       </button>
 
       <p className="text-zinc-600 text-xs text-center pt-1">
-        Gratis • Geen account nodig • Resultaat in 30 seconden
+        Gratis • Je score ontvang je direct per e-mail • Resultaat in 30 seconden
       </p>
     </form>
   );
