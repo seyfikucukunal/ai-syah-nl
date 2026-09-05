@@ -33,8 +33,11 @@ function scoreColor(score: number) {
   return "#ef4444";
 }
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function Hero() {
   const [url, setUrl] = useState("");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -54,8 +57,14 @@ export default function Hero() {
       return;
     }
 
+    if (!EMAIL_RE.test(email.trim())) {
+      setError("Vul een geldig e-mailadres in — daar sturen we je score naartoe");
+      return;
+    }
+
     setLoading(true);
     sessionStorage.setItem("pending_url", cleanUrl);
+    sessionStorage.setItem("pending_email", email.trim());
     router.push(`/geo-audit?url=${encodeURIComponent(cleanUrl)}`);
   };
 
@@ -100,7 +109,7 @@ export default function Hero() {
 
           {/* Scan form */}
           <form onSubmit={handleScan} className="space-y-3">
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <input
                 type="text"
                 value={url}
@@ -108,17 +117,24 @@ export default function Hero() {
                 placeholder="jouwbedrijf.nl"
                 className="flex-1 bg-zinc-900 border border-zinc-800 rounded-2xl px-5 py-4 text-white placeholder-zinc-600 focus:outline-none focus:border-cyan-400 transition-all text-base"
               />
-              <button
-                type="submit"
-                disabled={loading}
-                className="bg-cyan-400 hover:bg-cyan-300 text-black font-bold px-5 py-3.5 rounded-2xl text-sm transition-all whitespace-nowrap disabled:opacity-50"
-              >
-                {loading ? "Scannen..." : "Gratis scannen →"}
-              </button>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="jouw@email.nl"
+                className="flex-1 bg-zinc-900 border border-zinc-800 rounded-2xl px-5 py-4 text-white placeholder-zinc-600 focus:outline-none focus:border-cyan-400 transition-all text-base"
+              />
             </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-cyan-400 hover:bg-cyan-300 text-black font-bold px-5 py-4 rounded-2xl text-sm transition-all whitespace-nowrap disabled:opacity-50"
+            >
+              {loading ? "Scannen..." : "Gratis scannen →"}
+            </button>
             {error && <p className="text-red-400 text-sm pl-1">{error}</p>}
             <p className="text-zinc-600 text-xs pl-1">
-              Gratis • Geen account nodig • Resultaat in 30 seconden
+              Gratis • Score direct per e-mail • Resultaat in 30 seconden
             </p>
           </form>
 

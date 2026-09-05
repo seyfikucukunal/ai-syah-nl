@@ -122,6 +122,12 @@ export default function GeoAuditForm() {
         <AutoStartFromQuery
           onUrl={(urlParam) => {
             setUrl(urlParam);
+            const pendingEmail = sessionStorage.getItem("pending_email");
+            if (pendingEmail) {
+              sessionStorage.removeItem("pending_email");
+              setEmail(pendingEmail);
+              runScan(urlParam, pendingEmail);
+            }
           }}
         />
       </Suspense>

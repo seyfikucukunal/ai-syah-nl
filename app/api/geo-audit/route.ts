@@ -6,6 +6,7 @@ export const maxDuration = 120; // Vercel: max 120 seconden
 const GEO_API_URL = process.env.GEO_API_URL || "https://geo-api-eqn1.onrender.com";
 const RESEND_FROM = process.env.RESEND_FROM_EMAIL || "AI-syah.nl <info@ai-syah.nl>";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://www.ai-syah.nl";
+const LEAD_NOTIFY_EMAIL = process.env.LEAD_NOTIFY_EMAIL || "info@ai-syah.nl";
 
 const freeAuditCache = new Map<string, { data: unknown; timestamp: number }>();
 
@@ -147,6 +148,43 @@ async function sendResultsEmail(email: string, result: GeoAuditResult) {
   }
 }
 
+async function notifyOwner(leadEmail: string, result: GeoAuditResult, cached: boolean) {
+  if (!process.env.RESEND_API_KEY) return;
+
+  const score = result.geo_score ?? 0;
+  const brand = result.brand_name || result.domain;
+  const resultsUrl = `${BASE_URL}/geo-audit/results?domain=${encodeURIComponent(result.domain)}&cached=true`;
+
+  const html = `
+  <div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#ffffff;">
+    <p style="font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#22d3ee;font-weight:700;margin:0 0 12px;">Nieuwe GEO-scan lead</p>
+    <p style="font-size:15px;color:#18181b;margin:0 0 16px;line-height:1.6;">
+      <strong><a href="mailto:${leadEmail}" style="color:#18181b;">${leadEmail}</a></strong> heeft zojuist ${result.domain} laten scannen — score <strong>${score}/100</strong> (${brand}).
+      ${cached ? "Dit domein was al eerder gescand; iemand vroeg het cachedresultaat opnieuw op." : ""}
+    </p>
+    <a href="${resultsUrl}" style="display:inline-block;background:#18181b;color:#fff;font-weight:600;padding:10px 20px;border-radius:8px;text-decoration:none;font-size:13px;margin-bottom:12px;">
+      Bekijk het rapport →
+    </a>
+    <p style="font-size:12px;color:#71717a;margin-top:16px;">
+      Reageer direct door op "beantwoorden" te klikken — dat mailt rechtstreeks naar ${leadEmail}.
+    </p>
+  </div>`;
+
+  try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: RESEND_FROM,
+      to: LEAD_NOTIFY_EMAIL,
+      replyTo: leadEmail,
+      subject: `Nieuwe lead: ${result.domain} (${score}/100) — ${leadEmail}`,
+      html,
+    });
+    console.log(`[geo-audit lead] notificatie verstuurd naar=${LEAD_NOTIFY_EMAIL} lead=${leadEmail} domain=${result.domain}`);
+  } catch (err) {
+    console.error(`[geo-audit lead] notificatie mislukt:`, err);
+  }
+}
+
 export async function GET(request: NextRequest) {
   const domain = request.nextUrl.searchParams.get("domain");
   if (!domain) return NextResponse.json({ error: "Missing domain" }, { status: 400 });
@@ -167,6 +205,7 @@ export async function POST(request: NextRequest) {
   const cached = freeAuditCache.get(domain);
   if (cached) {
     console.log(`[geo-audit scan] domain=${domain} email=${email} cached=true at=${new Date().toISOString()}`);
+    await notifyOwner(email, { ...(cached.data as GeoAuditResult), domain }, true);
     return NextResponse.json({
       ...(cached.data as Record<string, unknown>),
       domain: domain,
@@ -194,6 +233,7 @@ export async function POST(request: NextRequest) {
     freeAuditCache.set(domain, { data: result, timestamp: Date.now() });
 
     await sendResultsEmail(email, result as GeoAuditResult);
+    await notifyOwner(email, result as GeoAuditResult, false);
 
     return NextResponse.json(result);
   } catch (err: unknown) {
