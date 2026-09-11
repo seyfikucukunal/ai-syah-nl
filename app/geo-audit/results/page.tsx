@@ -26,6 +26,38 @@ interface GeoAuditData {
   quick_wins: string[];
 }
 
+declare global {
+  interface Window {
+    oaiq?: (...args: unknown[]) => void;
+  }
+}
+
+// Dedupe-sleutel per voltooide scan (domein + datum van het resultaat), zodat
+// verversen, terugnavigeren of een herbezoek via de resultaten-e-mail de
+// "scan_completed" conversie niet nogmaals registreert.
+const OAIQ_FIRED_KEY_PREFIX = "oaiq_scan_completed_";
+
+function markScanCompleted(scanKey: string) {
+  if (typeof window === "undefined" || !window.oaiq) return;
+
+  let alreadyFired = false;
+  try {
+    alreadyFired = !!window.localStorage.getItem(OAIQ_FIRED_KEY_PREFIX + scanKey);
+  } catch {
+    // localStorage niet beschikbaar (bv. privénavigatie) — dedupe binnen deze
+    // paginasessie valt dan terug op de useRef-guard in de component.
+  }
+  if (alreadyFired) return;
+
+  window.oaiq("measure", "custom", { type: "custom" }, { custom_event_name: "scan_completed" });
+
+  try {
+    window.localStorage.setItem(OAIQ_FIRED_KEY_PREFIX + scanKey, "1");
+  } catch {
+    // kon niet persisteren — ref-guard voorkomt in elk geval dubbele fire binnen dit mount
+  }
+}
+
 function scoreColor(score: number) {
   if (score >= 70) return "#22d3ee";
   if (score >= 40) return "#f59e0b";
@@ -134,6 +166,7 @@ function GeoAuditResultsInner() {
   const ctaRef = useRef<HTMLDivElement>(null);
   const [paymentEmail, setPaymentEmail] = useState("");
   const [showEmailInput, setShowEmailInput] = useState(false);
+  const scanTrackedRef = useRef<string | null>(null);
 
   useEffect(() => {
     const stored = sessionStorage.getItem("geo_audit_result");
@@ -153,6 +186,16 @@ function GeoAuditResultsInner() {
       return () => clearTimeout(t);
     }
   }, [data]);
+
+  // OpenAI Ads conversie: alleen registreren zodra de scanresultaten
+  // daadwerkelijk beschikbaar zijn, en maximaal één keer per voltooide scan.
+  useEffect(() => {
+    if (!data) return;
+    const scanKey = `${domain || data.url}::${data.date}`;
+    if (scanTrackedRef.current === scanKey) return;
+    scanTrackedRef.current = scanKey;
+    markScanCompleted(scanKey);
+  }, [data, domain]);
 
 const handlePayment = async () => {
     if (!data) return;
