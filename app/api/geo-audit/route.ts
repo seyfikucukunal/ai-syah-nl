@@ -21,6 +21,26 @@ function extractDomain(url: string): string {
   }
 }
 
+// Volgt www<->apex (en andere) redirects zelf op, zodat de externe scan-engine
+// altijd de canonieke URL binnenkrijgt. Zonder dit ziet /audit/basic bijv.
+// "ai-syah.nl" (dat 307't naar "www.ai-syah.nl") als een kale URL zonder
+// llms.txt, terwijl het bestand op het canonieke domein wel bestaat.
+async function resolveCanonicalUrl(url: string): Promise<string> {
+  for (const method of ["HEAD", "GET"] as const) {
+    try {
+      const res = await fetch(url, {
+        method,
+        redirect: "follow",
+        signal: AbortSignal.timeout(10000),
+      });
+      if (res.url) return res.url;
+    } catch {
+      // probeer de volgende methode, of val terug op de originele url
+    }
+  }
+  return url;
+}
+
 interface GeoAuditResult {
   domain: string;
   brand_name?: string;
@@ -201,7 +221,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Vul een geldig e-mailadres in" }, { status: 400 });
   }
 
-  const domain = extractDomain(url);
+  const canonicalUrl = await resolveCanonicalUrl(url);
+  const domain = extractDomain(canonicalUrl);
   const cached = freeAuditCache.get(domain);
   if (cached) {
     console.log(`[geo-audit scan] domain=${domain} email=${email} cached=true at=${new Date().toISOString()}`);
@@ -219,7 +240,7 @@ export async function POST(request: NextRequest) {
     const apiRes = await fetch(`${GEO_API_URL}/audit/basic`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url }),
+      body: JSON.stringify({ url: canonicalUrl }),
       signal: AbortSignal.timeout(120000),
     });
 
