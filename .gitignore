@@ -39,3 +39,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Lokale werkbestanden: klantaudits, campagnes en scrapes (niet in publieke repo)
+/audits/
+/campagne/
+/COMPETITOR-REPUTATION-*
+/hp.html
+/jm.html
+/p.html
+/page.html
+/pg.html
+/sm.xml
+/urls.txt
+/psi_home.json
