@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -8,7 +9,7 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 border-b border-zinc-900 bg-black/70 backdrop-blur-xl">
       <div className="flex items-center justify-between px-6 py-5">
         <div className="flex items-center gap-3">
-          <img src="/logo-ai-syah.png" alt="AI-syah logo" className="h-10 w-10 rounded-full" />
+          <Image src="/logo-ai-syah.png" alt="AI-syah logo" width={40} height={40} priority className="h-10 w-10 rounded-full" />
           <span className="font-semibold tracking-wide">AI-syah.nl</span>
         </div>
 
